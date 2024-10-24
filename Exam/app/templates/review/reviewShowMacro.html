@@ -1,0 +1,35 @@
+{% macro reviewShow(review, current_user) %}
+<div class="review mb-4">
+    <div class="d-flex flex-row">
+        <img class="img-fluid rounded-circle cursor-pointer"
+            src="{{ url_for('static', filename='images/default-profile-picture-300x300.jpeg') }}" alt="profile-pic"
+            style="width: 50px;">
+        <div class="ms-3 fw-bold">{{ review.username }}</div>
+    </div>
+    <div class="d-flex flex-row">
+        <div class="">
+            {% for i in range(review.rating) %}
+            <i class=" fa-solid fa-star" style="color: #212529;"></i>
+            {%endfor%}
+            {% for i in range(5 - review.rating) %}
+            <i class="fa-regular fa-star" style="color: #212529;"></i>
+            {%endfor%}
+        </div>
+        <div class="mx-3">
+            {{ review.created_at.day }}
+            {{ review.created_at.strftime("%B") }}
+            {{ review.created_at.year }}
+            {{ review.created_at.strftime("%H:%M") }}
+        </div>
+        {% if current_user.is_authenticated and current_user.id == review.user_id %}
+        <div class="">
+            <a href="{{ url_for('review.delete_review', book_id=review.book_id, review_id=review.id) }}"><i
+                    class="fa-solid fa-trash" style="color: #212529;" aria-hidden="true"></i></a>
+        </div>
+        {% endif %}
+    </div>
+    <div class="text-break">
+        {{ review.text | safe }}
+    </div>
+</div>
+{% endmacro %}

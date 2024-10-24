@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Модерация рецензии №{{review.id}}</h1>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Название книги</th>
+                <td>{{review.book_title}}</td>
+            </tr>
+            <tr>
+                <th>Имя пользователя</th>
+                <td>{{review.username}}</td>
+            </tr>
+            <tr>
+                <th>Рейтинг</th>
+                <td>
+                    <div class="d-flex flex-row mt-1">
+                        {% for i in range(review.rating) %}
+                        <i class=" fa-solid fa-star" style="color: #212529;"></i>
+                        {%endfor%}
+                        {% for i in range(5 - review.rating) %}
+                        <i class="fa-regular fa-star" style="color: #212529;"></i>
+                        {%endfor%}
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>Статус</th>
+                <td>
+                    <div class="d-flex flex-row">
+                        {% if review.status == 'Отклонено' %}
+                        <i class="fa-solid fa-circle fa-xs my-auto me-2" style="color: #ff6961;"></i>
+                        {% elif review.status == 'На рассмотрении' %}
+                        <i class="fa-solid fa-circle fa-xs my-auto me-2" style="color: #fce883;"></i>
+                        {% elif review.status == 'Одобрено' %}
+                        <i class="fa-solid fa-circle fa-xs my-auto me-2" style="color: #99FF99;"></i>
+                        {% endif %}
+                        {{ review.status }}
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>Дата</th>
+                <td>
+                    <div class="">
+                        {{ review.created_at.day }}
+                        {{ review.created_at.strftime("%B") }}
+                        {{ review.created_at.year }}
+                        {{ review.created_at.strftime("%H:%M") }}
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>Текст рецензии</th>
+                <td class="text-break">{{ review.text | safe }}</td>
+            </tr>
+            <tr>
+                <th>Действие</th>
+                <td>
+                    <a href="{{url_for('review.decision_review', review_id=review.id, status='reject')}}" type="button"
+                        class="btn btn-danger">Отклонить</a>
+                    <a href="{{url_for('review.decision_review', review_id=review.id, status='approve')}}" type="button"
+                        class="btn btn-success">Одобрить</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

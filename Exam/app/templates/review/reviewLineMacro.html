@@ -1,0 +1,41 @@
+{% macro reviewLine(review) %}
+<div class="bg-light rounded py-2 px-3 border border-1 mb-2 d-flex flex-row">
+    <!-- book_title -->
+    <div class="my-auto">
+        «{{review.book_title}}»
+    </div>
+    <!-- Rating -->
+    <div class="ms-3 d-flex flex-row">
+        {% for i in range(review.rating) %}
+        <i class=" fa-solid fa-star my-auto" style="color: #212529;"></i>
+        {%endfor%}
+        {% for i in range(5 - review.rating) %}
+        <i class="fa-regular fa-star my-auto" style="color: #212529;"></i>
+        {%endfor%}
+    </div>
+    <!-- Status -->
+    <div class="ms-3 my-auto d-flex flex-row">
+        {% if review.status == 'Отклонено' %}
+        <i class="fa-solid fa-circle fa-xs my-auto me-2" style="color: #ff6961;"></i>
+        {% elif review.status == 'На рассмотрении' %}
+        <i class="fa-solid fa-circle fa-xs my-auto me-2" style="color: #fce883;"></i>
+        {% elif review.status == 'Одобрено' %}
+        <i class="fa-solid fa-circle fa-xs my-auto me-2" style="color: #99FF99;"></i>
+        {% endif %}
+        {{ review.status }}
+    </div>
+    {% if request.endpoint == "review.moderate_reviews" %}
+    <!-- created_at -->
+    <div class="ms-3 my-auto">
+        {{ review.created_at.day }}
+        {{ review.created_at.strftime("%B") }}
+        {{ review.created_at.year }}
+        {{ review.created_at.strftime("%H:%M") }}
+    </div>
+    {% endif %}
+    <!-- Text -->
+    <div class="moderate-reviews-text ms-3 text-break my-auto">
+        {{ review.text | safe }}
+    </div>
+</div>
+{% endmacro %}

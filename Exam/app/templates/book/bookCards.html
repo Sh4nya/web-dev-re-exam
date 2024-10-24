@@ -1,0 +1,59 @@
+{% macro bookCards(books, current_user) %}
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for book in books %}
+    <div class="col">
+        <div class="card mb-3" style="max-width: 540px;">
+
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <a href="{{url_for('book.show_book', id=book.id)}}" class="text-decoration-none text-reset"> {#
+                        Костыль ссылка #}
+                        <img src="{{ url_for('book.media_images', filename=book.cover_filename) }}"
+                            class="img-fluid rounded-start user-select-none" alt="...">
+                    </a>
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body h-100 d-flex flex-column">
+                        <a href="{{url_for('book.show_book', id=book.id)}}" class="text-decoration-none text-reset"> {#
+                            Костыль ссылка #}
+                            <h5 class="card-title">{{book.title}}</h5>
+                            <div class="card-genres one-line-truncate mb-1">{{book.year}} г.</div>
+                            <div class="card-genres one-line-truncate mb-1">{{book.genres}}</div>
+                            <div class="card-text two-line-truncate"
+                                title="{{book.description | safe | truncate(400, false)}}">
+                                {{book.description | safe}}</div>
+                        </a>
+                        <div class="card-rating d-flex flex-row mt-auto">
+                            <a href="{{url_for('book.show_book', id=book.id)}}" class="text-decoration-none text-reset">
+                                {# Костыль ссылка #}
+                                <div class="d-flex flex-row">
+                                    <div class="my-auto"><i class="fa-solid fa-star fa-sm" style="color: #212529;"></i>
+                                    </div>
+                                    <div class="ms-1">{{book.rating | round(1)}}</div>
+                                    <div class="review-count ms-1">({{book.review_count}})</div>
+                                </div>
+                            </a>
+                            <div class="ms-auto">
+                                {% if current_user.is_authenticated %}
+                                {% if current_user.can('editBook') %}
+                                <a href="{{url_for('book.edit_book', id=book.id)}}" class="my-auto"><i
+                                        class="fa-solid fa-pen-to-square" style="color: #212529;"></i></a>
+                                {% endif %}
+                                {% if current_user.can('deleteBook') %}
+                                {% set titleList = book.title.split(' ') %}
+                                <a href="" class="my-auto cursor-pointer" data-bs-toggle="modal"
+                                    data-bs-target="#delete-book-modal"><i
+                                        class="fa-solid fa-trash btn-delete-book book-{{ book.id }} {{titleList | join('-')}}"
+                                        style="color: #212529;"></i></a>
+                                {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endmacro %}

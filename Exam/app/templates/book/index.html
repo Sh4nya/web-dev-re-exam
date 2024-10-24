@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% from "book/bookCards.html" import bookCards %}
+{% from 'pagination.html' import render_pagination %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Книги</h1>
+    {% if books %}
+    {{bookCards(books, current_user)}}
+    {{render_pagination(pagination, 'book.index')}}
+    {% else %}
+    {% if current_user.is_authenticated %}
+    {% if current_user.is_admin() %}
+    <p class="text-center">Книг пока нет, но вы можете <a href="{{ url_for('book.create_book') }}">добавить</a> их.</p>
+    {% else %}
+    <p class="text-center">Книг пока нет, обратитесь к администратору.</p>
+    {% endif %}
+    {% else %}
+    <p class="text-center">Книг пока нет, обратитесь к администратору.</p>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block modal %}
+<!-- Modal -->
+<div class="modal fade" id="delete-book-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="delete-book-modal-label">Вы уверены, что хотите удалить книгу {}?
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Нет</button>
+                <a href="" type="button" class="btn btn-danger btn-delete-book-confirm px-4">Да</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock modal %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% from "review/reviewLineMacro.html" import reviewLine %}
+{% from "pagination.html" import render_pagination %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Мои рецензии</h1>
+    {% if reviews %}
+    {% for review in reviews %}
+    {{reviewLine(review)}}
+    {% endfor %}
+    {{render_pagination(pagination, 'review.my_reviews')}}
+    {% else %}
+    <p class="text-center">Рецензий пока нет.</p>
+    {% endif %}
+</div>
+{% endblock %}

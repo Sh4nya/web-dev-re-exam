@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% from "review/reviewLineMacro.html" import reviewLine %}
+{% from "pagination.html" import render_pagination %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Модерация рецензий</h1>
+    {% if reviews %}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Название книги</th>
+                <th scope="col">Имя пользователя</th>
+                <th scope="col">Рейтинг</th>
+                <th scope="col">Статус</th>
+                <th scope="col">Дата</th>
+                <th scope="col">Текст рецензии</th>
+                <th scope="col">Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for review in reviews %}
+            <tr>
+                <td>«{{review.book_title}}»</td>
+                <td>{{review.username}}</td>
+                <td>
+                    <div class="d-flex flex-row mt-1">
+                        {% for i in range(review.rating) %}
+                        <i class=" fa-solid fa-star" style="color: #212529;"></i>
+                        {%endfor%}
+                        {% for i in range(5 - review.rating) %}
+                        <i class="fa-regular fa-star" style="color: #212529;"></i>
+                        {%endfor%}
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex flex-row">
+                        {% if review.status == 'Отклонено' %}
+                        <i class="fa-solid fa-circle fa-xs my-auto me-2" style="color: #ff6961;"></i>
+                        {% elif review.status == 'На рассмотрении' %}
+                        <i class="fa-solid fa-circle fa-xs my-auto me-2" style="color: #fce883;"></i>
+                        {% elif review.status == 'Одобрено' %}
+                        <i class="fa-solid fa-circle fa-xs my-auto me-2" style="color: #99FF99;"></i>
+                        {% endif %}
+                        {{ review.status }}
+                    </div>
+                </td>
+                <td>
+                    <div class="">
+                        {{ review.created_at.day }}
+                        {{ review.created_at.strftime("%B") }}
+                        {{ review.created_at.year }}
+                        {{ review.created_at.strftime("%H:%M") }}
+                    </div>
+                </td>
+                <td class="text-break">{{ review.text | safe }}</td>
+                <td class="">
+                    <a href="{{url_for('review.inspect_review', review_id=review.id)}}" type="button"
+                        class="btn btn-dark">Рассмотреть</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {{render_pagination(pagination, 'review.moderate_reviews')}}
+    {% else %}
+    <p class="text-center">Рецензий на модерацию пока нет.</p>
+    {% endif %}
+</div>
+{% endblock %}
